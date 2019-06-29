@@ -12,7 +12,7 @@ var width = svgWidth - margin.left - margin.right;
 var height = svgHeight - margin.top - margin.bottom;
 
 // Create an SVG wrapper, append an SVG group that will hold our chart, and shift the latter by left and top margins.
-var svg = d3.select(".chart")
+var svg = d3.select("#scatter")
   .append("svg")
   .attr("width", svgWidth)
   .attr("height", svgHeight);
@@ -34,11 +34,11 @@ d3.csv("assets/data/data.csv")
     // Step 2: Create scale functions
     // ==============================
     var xLinearScale = d3.scaleLinear()
-      .domain([20, d3.max(hpov, d => d.poverty)])
+      .domain([8.8, d3.max(hpov, d => d.poverty)])
       .range([0, width]);
 
     var yLinearScale = d3.scaleLinear()
-      .domain([0, d3.max(hpov, d => d.healthcare)])
+      .domain([3.5, d3.max(hpov, d => d.healthcare)])
       .range([height, 0]);
 
     // Step 3: Create axis functions
@@ -65,8 +65,20 @@ d3.csv("assets/data/data.csv")
     .attr("cy", d => yLinearScale(d.healthcare))
     .attr("r", "15")
     .attr("fill", "lightBlue")
-    .attr("opacity", ".5")
-    .text(d => (d.abbr));
+    .attr("opacity", ".98");
+
+    var circlesTxt = chartGroup.selectAll(".sttext")
+    .data(hpov)
+    .enter()
+    .append("text")
+    .classed("sttext", true)
+    .attr("x", d => xLinearScale(d.poverty))
+    .attr("y", d => yLinearScale(d.healthcare))
+    .attr("dy", 3)
+    .style("font-size", "15px")
+    .style("text-anchor", "middle")
+    .style('fill', 'white')
+    .text(function(d){return d.abbr});
 
     // Step 6: Initialize tool tip
     // ==============================
